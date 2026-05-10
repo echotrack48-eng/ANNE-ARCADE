@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Faith's Fun World 🌈</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff3d7f;--yellow:#ffe000;--cyan:#00e5ff;
+  --orange:#ff6b2b;--green:#00e676;--purple:#d500f9;
+  --bg:#0d0016;--card:#150020;--text:#fff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Nunito',sans-serif;overflow-x:hidden;min-height:100vh}
+
+/* CONFETTI */
+.confetti-piece{position:fixed;top:-10px;width:10px;height:10px;border-radius:2px;
+  animation:confettiFall linear forwards;pointer-events:none;z-index:999}
+@keyframes confettiFall{
+  0%{transform:translateY(0) rotate(0deg) translateX(0);opacity:1}
+  100%{transform:translateY(110vh) rotate(720deg) translateX(var(--drift));opacity:0}
+}
+
+/* CURSOR TRAIL */
+.trail{position:fixed;border-radius:50%;pointer-events:none;z-index:9998;animation:trailFade 0.6s forwards}
+@keyframes trailFade{to{opacity:0;transform:scale(0)}}
+
+/* BG */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse at 20% 20%,rgba(213,0,249,0.15) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 80%,rgba(255,61,127,0.12) 0%,transparent 50%),
+             radial-gradient(ellipse at 50% 50%,rgba(0,229,255,0.06) 0%,transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+/* ============ HERO ============ */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;padding:2rem 1.2rem;position:relative;z-index:1;
+}
+.hero-tag{
+  display:inline-block;background:var(--yellow);color:#000;
+  font-size:0.7rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;
+  padding:0.35rem 1rem;border-radius:20px;margin-bottom:1.5rem;
+  animation:popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.hero-name{
+  font-family:'Fredoka One',sans-serif;
+  font-size:clamp(4rem,18vw,9rem);line-height:0.95;
+  background:linear-gradient(135deg,var(--yellow) 0%,var(--pink) 40%,var(--cyan) 80%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  animation:popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.15s both;
+  filter:drop-shadow(0 0 40px rgba(255,61,127,0.4));
+}
+.hero-sub{
+  font-size:clamp(1rem,3vw,1.3rem);color:rgba(255,255,255,0.7);margin-top:1rem;
+  animation:popIn 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+  max-width:340px;line-height:1.6;
+}
+.scroll-down{margin-top:2.5rem;animation:popIn 0.6s ease 0.5s both,bobble 2s ease 1s infinite}
+.scroll-down span{display:block;width:1.5rem;height:1.5rem;border-right:3px solid var(--pink);
+  border-bottom:3px solid var(--pink);transform:rotate(45deg);margin:0 auto;}
+
+@keyframes popIn{from{opacity:0;transform:scale(0.7)}to{opacity:1;transform:scale(1)}}
+@keyframes bobble{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+
+/* ============ SECTION TITLE ============ */
+.sec-title{
+  font-family:'Fredoka One',sans-serif;font-size:clamp(1.8rem,7vw,3rem);text-align:center;
+  margin-bottom:0.5rem;
+}
+.sec-sub{text-align:center;color:rgba(255,255,255,0.5);font-size:0.85rem;margin-bottom:2rem}
+
+/* ============ COMPLIMENT MACHINE ============ */
+.section{padding:4rem 1.2rem;max-width:600px;margin:0 auto;position:relative;z-index:1}
+
+.compliment-box{
+  background:linear-gradient(135deg,#1a0030,#250040);
+  border:2px solid var(--pink);border-radius:24px;padding:2rem 1.5rem;text-align:center;
+  box-shadow:0 0 40px rgba(255,61,127,0.2);
+}
+.compliment-text{
+  font-family:'Fredoka One',sans-serif;font-size:clamp(1.2rem,5vw,1.8rem);
+  line-height:1.4;min-height:80px;display:flex;align-items:center;justify-content:center;
+  color:var(--yellow);transition:all 0.3s;
+}
+.compliment-sub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:0.5rem;margin-bottom:1.5rem}
+.big-btn{
+  display:inline-block;padding:0.9rem 2rem;border:none;border-radius:50px;cursor:pointer;
+  font-family:'Fredoka One',sans-serif;font-size:1rem;letter-spacing:0.05em;
+  transition:transform 0.2s,box-shadow 0.2s;position:relative;overflow:hidden;
+}
+.big-btn:active{transform:scale(0.95)}
+.btn-pink{background:linear-gradient(135deg,var(--pink),var(--orange));color:#fff;
+  box-shadow:0 8px 24px rgba(255,61,127,0.4)}
+.btn-cyan{background:linear-gradient(135deg,var(--cyan),#0060ff);color:#000;
+  box-shadow:0 8px 24px rgba(0,229,255,0.3)}
+.btn-green{background:linear-gradient(135deg,var(--green),#00b09b);color:#000;
+  box-shadow:0 8px 24px rgba(0,230,118,0.3)}
+.btn-purple{background:linear-gradient(135deg,var(--purple),#6200ea);color:#fff;
+  box-shadow:0 8px 24px rgba(213,0,249,0.4)}
+.big-btn:hover{transform:translateY(-3px) scale(1.03)}
+
+/* ============ MOOD QUIZ ============ */
+.quiz-card{background:linear-gradient(135deg,#001a30,#002540);border:2px solid var(--cyan);
+  border-radius:24px;padding:2rem 1.5rem;box-shadow:0 0 40px rgba(0,229,255,0.15)}
+.quiz-q{font-family:'Fredoka One',sans-serif;font-size:1.3rem;color:var(--cyan);margin-bottom:1.2rem;min-height:60px}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:0.8rem}
+.quiz-opt{padding:0.9rem 0.7rem;border-radius:14px;border:2px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.04);cursor:pointer;font-size:0.85rem;font-weight:700;
+  text-align:center;transition:all 0.2s;line-height:1.4;color:rgba(255,255,255,0.8)}
+.quiz-opt:hover{border-color:var(--cyan);background:rgba(0,229,255,0.08);color:#fff;transform:scale(1.03)}
+.quiz-opt.selected{border-color:var(--cyan);background:rgba(0,229,255,0.15);color:var(--cyan)}
+.quiz-progress{display:flex;gap:0.4rem;justify-content:center;margin-bottom:1.2rem}
+.quiz-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:all 0.3s}
+.quiz-dot.done{background:var(--cyan)}
+.quiz-dot.active{background:var(--yellow);transform:scale(1.3)}
+.quiz-result{text-align:center;display:none}
+.quiz-result-emoji{font-size:4rem;margin-bottom:0.8rem}
+.quiz-result-title{font-family:'Fredoka One',sans-serif;font-size:1.8rem;
+  background:linear-gradient(135deg,var(--yellow),var(--pink));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:0.6rem}
+.quiz-result-desc{font-size:0.85rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:1.2rem}
+
+/* ============ SCRATCH CARD ============ */
+.scratch-wrap{position:relative;border-radius:20px;overflow:hidden;
+  box-shadow:0 0 40px rgba(255,230,0,0.2);border:2px solid var(--yellow)}
+.scratch-reveal{
+  background:linear-gradient(135deg,#1a0030,#250040);padding:2.5rem 1.5rem;
+  text-align:center;min-height:180px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0.6rem;
+}
+.scratch-reveal-emoji{font-size:3.5rem}
+.scratch-reveal-text{font-family:'Fredoka One',sans-serif;font-size:1.4rem;color:var(--yellow)}
+.scratch-reveal-sub{font-size:0.8rem;color:rgba(255,255,255,0.5)}
+canvas#scratch{position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;border-radius:18px;touch-action:none}
+
+/* ============ FLOATING EMOJIS ============ */
+.float-emoji{
+  position:fixed;pointer-events:none;font-size:1.5rem;z-index:9997;
+  animation:floatUp 1.5s ease forwards;
+}
+@keyframes floatUp{
+  0%{opacity:1;transform:translateY(0) scale(1) rotate(0deg)}
+  100%{opacity:0;transform:translateY(-120px) scale(0.5) rotate(30deg)}
+}
+
+/* ============ MEMORY GAME ============ */
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.6rem;max-width:340px;margin:0 auto}
+.mem-card{
+  aspect-ratio:1;border-radius:12px;cursor:pointer;
+  background:linear-gradient(135deg,var(--purple),#6200ea);
+  border:2px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;transition:transform 0.3s;
+  perspective:600px;position:relative;
+}
+.mem-card .front,.mem-card .back{
+  position:absolute;inset:0;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.6rem;backface-visibility:hidden;transition:transform 0.4s;
+}
+.mem-card .front{background:linear-gradient(135deg,#d500f9,#6200ea);transform:rotateY(0deg)}
+.mem-card .back{background:linear-gradient(135deg,#1a0030,#250040);transform:rotateY(180deg)}
+.mem-card.flipped .front{transform:rotateY(180deg)}
+.mem-card.flipped .back{transform:rotateY(0deg)}
+.mem-card.matched .back{background:linear-gradient(135deg,rgba(0,230,118,0.3),rgba(0,176,155,0.2));
+  border-color:var(--green)}
+.mem-stats{display:flex;justify-content:space-between;margin-bottom:1rem;
+  font-size:0.8rem;font-weight:800}
+.mem-stat{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:0.5rem 1rem;text-align:center}
+.mem-stat-val{font-family:'Fredoka One',sans-serif;font-size:1.2rem;color:var(--yellow)}
+.mem-stat-label{color:rgba(255,255,255,0.4);font-size:0.65rem}
+
+/* ============ FOOTER ============ */
+footer{
+  text-align:center;padding:3rem 1rem 4rem;
+  font-family:'Fredoka One',sans-serif;font-size:1.1rem;
+  color:rgba(255,255,255,0.3);position:relative;z-index:1;
+}
+footer span{color:var(--pink)}
+
+/* divider */
+.wave-div{text-align:center;font-size:2rem;letter-spacing:0.5rem;color:rgba(255,255,255,0.08);padding:1rem 0}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">✨ Made just for you ✨</div>
+  <div class="hero-name">Faith</div>
+  <p class="hero-sub">Your own little corner of the internet — full of fun, good vibes, and surprises 🎉</p>
+  <div class="scroll-down"><span></span></div>
+</div>
+
+<div class="wave-div">· · · ✦ · · ·</div>
+
+<!-- COMPLIMENT MACHINE -->
+<div class="section">
+  <div class="sec-title" style="background:linear-gradient(135deg,var(--yellow),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+    Compliment Machine 💬
+  </div>
+  <div class="sec-sub">Tap the button. Receive your truth.</div>
+  <div class="compliment-box">
+    <div class="compliment-text" id="compliment-text">Press the button to unlock a vibe ✨</div>
+    <div class="compliment-sub">compliment #<span id="comp-count">0</span></div>
+    <button class="big-btn btn-pink" onclick="newCompliment()">Give me a compliment! 🎲</button>
+  </div>
+</div>
+
+<div class="wave-div">· · · ✦ · · ·</div>
+
+<!-- MOOD QUIZ -->
+<div class="section">
+  <div class="sec-title" style="background:linear-gradient(135deg,var(--cyan),#0060ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+    What's Your Vibe Today? 🌊
+  </div>
+  <div class="sec-sub">A 5-question quiz. No wrong answers.</div>
+  <div class="quiz-card">
+    <div class="quiz-progress" id="quiz-progress"></div>
+    <div class="quiz-q" id="quiz-q"></div>
+    <div class="quiz-options" id="quiz-opts"></div>
+    <div class="quiz-result" id="quiz-result">
+      <div class="quiz-result-emoji" id="qr-emoji"></div>
+      <div class="quiz-result-title" id="qr-title"></div>
+      <div class="quiz-result-desc" id="qr-desc"></div>
+      <button class="big-btn btn-cyan" onclick="resetQuiz()">Try Again 🔄</button>
+    </div>
+  </div>
+</div>
+
+<div class="wave-div">· · · ✦ · · ·</div>
+
+<!-- MEMORY GAME -->
+<div class="section">
+  <div class="sec-title" style="background:linear-gradient(135deg,var(--green),#00b09b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+    Memory Game 🧠
+  </div>
+  <div class="sec-sub">Match all the pairs. Beat your best score!</div>
+  <div class="mem-stats">
+    <div class="mem-stat"><div class="mem-stat-val" id="mem-moves">0</div><div class="mem-stat-label">MOVES</div></div>
+    <div class="mem-stat"><div class="mem-stat-val" id="mem-pairs">0/8</div><div class="mem-stat-label">PAIRS</div></div>
+    <div class="mem-stat"><div class="mem-stat-val" id="mem-time">0s</div><div class="mem-stat-label">TIME</div></div>
+  </div>
+  <div class="mem-grid" id="mem-grid"></div>
+  <div style="text-align:center;margin-top:1.2rem">
+    <button class="big-btn btn-green" onclick="initMemory()">New Game 🔀</button>
+  </div>
+</div>
+
+<div class="wave-div">· · · ✦ · · ·</div>
+
+<!-- SCRATCH CARD -->
+<div class="section">
+  <div class="sec-title" style="background:linear-gradient(135deg,var(--yellow),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">
+    Scratch Card 🎰
+  </div>
+  <div class="sec-sub">Scratch to reveal a surprise message!</div>
+  <div class="scratch-wrap" id="scratch-wrap">
+    <div class="scratch-reveal" id="scratch-reveal">
+      <div class="scratch-reveal-emoji" id="sc-emoji">🎁</div>
+      <div class="scratch-reveal-text" id="sc-text">Loading...</div>
+      <div class="scratch-reveal-sub" id="sc-sub"></div>
+    </div>
+    <canvas id="scratch"></canvas>
+  </div>
+  <div style="text-align:center;margin-top:1rem">
+    <button class="big-btn btn-purple" onclick="resetScratch()">New Card 🎴</button>
+  </div>
+</div>
+
+<footer>
+  Built with <span>♡</span> just for Faith · Have fun! 🌈
+</footer>
+
+<script>
+// ============ CURSOR TRAIL ============
+const TRAIL_COLORS = ['#ff3d7f','#ffe000','#00e5ff','#ff6b2b','#00e676','#d500f9'];
+let trailIdx = 0;
+document.addEventListener('mousemove', e => {
+  const d = document.createElement('div');
+  d.className = 'trail';
+  d.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;width:10px;height:10px;background:${TRAIL_COLORS[trailIdx%TRAIL_COLORS.length]};position:fixed;border-radius:50%;pointer-events:none;z-index:9998`;
+  document.body.appendChild(d);
+  trailIdx++;
+  setTimeout(() => d.remove(), 600);
+});
+
+// ============ CONFETTI ============
+function launchConfetti(count=40){
+  const colors=['#ff3d7f','#ffe000','#00e5ff','#ff6b2b','#00e676','#d500f9','#fff'];
+  for(let i=0;i<count;i++){
+    const c=document.createElement('div');
+    c.className='confetti-piece';
+    const drift = (Math.random()-0.5)*300+'px';
+    c.style.cssText=`left:${Math.random()*100}vw;background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;border-radius:${Math.random()>0.5?'50%':'2px'};
+      --drift:${drift};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*0.5}s`;
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+function floatEmoji(x,y,emoji){
+  const e=document.createElement('div');
+  e.className='float-emoji';e.textContent=emoji;
+  e.style.left=x+'px';e.style.top=y+'px';
+  document.body.appendChild(e);
+  setTimeout(()=>e.remove(),1500);
+}
+
+// ============ COMPLIMENT MACHINE ============
+const compliments=[
+  "You literally radiate good energy wherever you go 🌟",
+  "Your smile could cure a bad day instantly 😊",
+  "You're the kind of person people never forget 💫",
+  "Your personality is honestly one in a billion 🌸",
+  "You make the world feel lighter just by being in it 🕊️",
+  "The way you carry yourself? Absolutely iconic 👑",
+  "You're someone people feel lucky to know ✨",
+  "Your vibe is unmatched — like genuinely unmatched 🔥",
+  "You've got a rare kind of beauty — inside AND out 💎",
+  "People around you smile more because of you 🌈",
+  "You're proof that good people still exist 🌺",
+  "Your presence is literally a gift 🎁",
+  "You move different. Always have. Always will. 💅",
+  "The world needs more people with your kind of heart 💝",
+  "You're the vibe AND the energy. Both. Always. ⚡",
+];
+let compCount=0,lastComp=-1;
+function newCompliment(e){
+  let idx;do{idx=Math.floor(Math.random()*compliments.length)}while(idx===lastComp);
+  lastComp=idx;compCount++;
+  const el=document.getElementById('compliment-text');
+  el.style.opacity=0;el.style.transform='scale(0.9)';
+  setTimeout(()=>{
+    el.textContent=compliments[idx];
+    el.style.transition='all 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+    el.style.opacity=1;el.style.transform='scale(1)';
+    document.getElementById('comp-count').textContent=compCount;
+  },200);
+  launchConfetti(20);
+}
+
+// ============ MOOD QUIZ ============
+const questions=[
+  {q:"Pick your ideal Saturday:",opts:["Cozy at home 🏠","Out with friends 🎉","Exploring somewhere new 🗺️","Doing absolutely nothing 😴"]},
+  {q:"Your go-to comfort food?",opts:["Jollof rice 🍚","Fries & chicken 🍟","Suya 🔥","Ice cream 🍦"]},
+  {q:"Which energy hits different?",opts:["Morning sunrise ☀️","Rainy evenings 🌧️","Late night city lights 🌃","Golden hour 🌅"]},
+  {q:"When life gets hard you...",opts:["Talk to someone 💬","Go quiet & reflect 🤫","Listen to music 🎶","Keep moving forward 💪"]},
+  {q:"Pick a superpower:",opts:["Read minds 🧠","Teleport anywhere 🌍","Freeze time ⏱️","Talk to animals 🐾"]},
+];
+const results=[
+  {emoji:'🌸',title:'The Soft Star',desc:'You radiate warmth, peace, and calm wherever you go. People feel safe around you. Your energy is gentle but your impact is massive. You\'re the friend everyone needs but rarely finds.'},
+  {emoji:'🔥',title:'The Bold Force',desc:'You show up with energy that\'s impossible to ignore. Confident, fun, and magnetic — you make any room better just by walking in. Nothing stops you for long.'},
+  {emoji:'🌊',title:'The Deep Soul',desc:'There\'s so much more to you than people see. Thoughtful, creative, and emotionally intelligent — you feel things deeply and that\'s a superpower, not a weakness.'},
+  {emoji:'⭐',title:'The Golden One',desc:'You bring joy, colour, and life to everything you touch. You\'re the sunshine in people\'s days, the reason memories are made. Rare energy. Real impact.'},
+];
+let qIdx=0,scores=[0,0,0,0];
+function renderQuiz(){
+  const prog=document.getElementById('quiz-progress');
+  prog.innerHTML=questions.map((_,i)=>`<div class="quiz-dot ${i<qIdx?'done':i===qIdx?'active':''}"></div>`).join('');
+  document.getElementById('quiz-q').textContent=questions[qIdx].q;
+  const opts=document.getElementById('quiz-opts');
+  opts.innerHTML=questions[qIdx].opts.map((o,i)=>`<div class="quiz-opt" onclick="pickOpt(${i})">${o}</div>`).join('');
+}
+function pickOpt(i){
+  scores[i%4]++;
+  document.querySelectorAll('.quiz-opt').forEach((el,j)=>{if(j===i)el.classList.add('selected')});
+  setTimeout(()=>{
+    qIdx++;
+    if(qIdx>=questions.length){showResult();}
+    else{renderQuiz();}
+  },400);
+}
+function showResult(){
+  const max=scores.indexOf(Math.max(...scores));
+  const r=results[max];
+  document.getElementById('quiz-opts').style.display='none';
+  document.getElementById('quiz-q').style.display='none';
+  document.getElementById('quiz-progress').style.display='none';
+  const res=document.getElementById('quiz-result');
+  res.style.display='block';
+  document.getElementById('qr-emoji').textContent=r.emoji;
+  document.getElementById('qr-title').textContent=r.title;
+  document.getElementById('qr-desc').textContent=r.desc;
+  launchConfetti(50);
+}
+function resetQuiz(){
+  qIdx=0;scores=[0,0,0,0];
+  document.getElementById('quiz-result').style.display='none';
+  document.getElementById('quiz-opts').style.display='grid';
+  document.getElementById('quiz-q').style.display='block';
+  document.getElementById('quiz-progress').style.display='flex';
+  renderQuiz();
+}
+renderQuiz();
+
+// ============ MEMORY GAME ============
+const MEM_EMOJIS=['🌸','⭐','🔥','🎵','💎','🌈','🦋','🎯'];
+let memCards=[],flipped=[],matched=0,moves=0,memTimer=null,memSeconds=0,canFlip=true;
+function shuffle(a){return a.sort(()=>Math.random()-0.5)}
+function initMemory(){
+  clearInterval(memTimer);memSeconds=0;moves=0;matched=0;flipped=[];canFlip=true;
+  document.getElementById('mem-moves').textContent=0;
+  document.getElementById('mem-pairs').textContent='0/8';
+  document.getElementById('mem-time').textContent='0s';
+  const deck=shuffle([...MEM_EMOJIS,...MEM_EMOJIS]);
+  const grid=document.getElementById('mem-grid');
+  grid.innerHTML='';
+  memCards=deck.map((emoji,i)=>{
+    const card=document.createElement('div');card.className='mem-card';
+    card.innerHTML=`<div class="front">❓</div><div class="back">${emoji}</div>`;
+    card.dataset.emoji=emoji;card.dataset.idx=i;
+    card.addEventListener('click',()=>flipCard(card,i,emoji));
+    grid.appendChild(card);return card;
+  });
+  memTimer=setInterval(()=>{memSeconds++;document.getElementById('mem-time').textContent=memSeconds+'s'},1000);
+}
+function flipCard(card,idx,emoji){
+  if(!canFlip||card.classList.contains('flipped')||card.classList.contains('matched'))return;
+  card.classList.add('flipped');flipped.push({card,emoji});
+  if(flipped.length===2){
+    canFlip=false;moves++;
+    document.getElementById('mem-moves').textContent=moves;
+    setTimeout(()=>{
+      if(flipped[0].emoji===flipped[1].emoji){
+        flipped.forEach(f=>f.card.classList.add('matched'));
+        matched++;document.getElementById('mem-pairs').textContent=matched+'/8';
+        if(matched===8){clearInterval(memTimer);setTimeout(()=>{launchConfetti(80);alert(`🎉 You won!\n⏱ ${memSeconds}s · 🎯 ${moves} moves\n\nAmazing, Faith!`)},200);}
+      } else {flipped.forEach(f=>f.card.classList.remove('flipped'));}
+      flipped=[];canFlip=true;
+    },700);
+  }
+}
+initMemory();
+
+// ============ SCRATCH CARD ============
+const scratchMessages=[
+  {emoji:'💌',text:'Someone thinks you\'re amazing',sub:'And they mean it with their whole chest.'},
+  {emoji:'🌟',text:'You\'re someone\'s favourite person',sub:'More than you\'ll ever know.'},
+  {emoji:'🎯',text:'Your next chapter? Your BEST one.',sub:'Everything is lining up for you.'},
+  {emoji:'🔥',text:'You\'re built different, Faith',sub:'And that\'s not a compliment — it\'s a fact.'},
+  {emoji:'💎',text:'Rare. Valuable. Irreplaceable.',sub:'That\'s just what you are.'},
+  {emoji:'🌈',text:'Good things are coming your way',sub:'Closer than you think. Keep going.'},
+  {emoji:'👑',text:'Unbothered. Moisturised. Thriving.',sub:'That\'s the only era you\'re allowed.'},
+  {emoji:'🌸',text:'Your vibe is literally a blessing',sub:'The world is better because you\'re in it.'},
+];
+let currentScratch=null;
+function resetScratch(){
+  currentScratch=scratchMessages[Math.floor(Math.random()*scratchMessages.length)];
+  document.getElementById('sc-emoji').textContent=currentScratch.emoji;
+  document.getElementById('sc-text').textContent=currentScratch.text;
+  document.getElementById('sc-sub').textContent=currentScratch.sub;
+  initScratch();
+}
+function initScratch(){
+  const canvas=document.getElementById('scratch');
+  const wrap=document.getElementById('scratch-wrap');
+  canvas.width=wrap.offsetWidth;canvas.height=wrap.querySelector('.scratch-reveal').offsetHeight;
+  const ctx=canvas.getContext('2d');
+  const grad=ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+  grad.addColorStop(0,'#d500f9');grad.addColorStop(0.5,'#ff6b2b');grad.addColorStop(1,'#ffe000');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(255,255,255,0.15)';
+  for(let i=0;i<6;i++){ctx.font='bold 1.1rem Nunito';ctx.fillText('✨ Scratch me! ✨',20+Math.random()*60,40+i*(canvas.height/6));}
+  let scratching=false;
+  function getPos(e){
+    const r=canvas.getBoundingClientRect();
+    const src=e.touches?e.touches[0]:e;
+    return{x:(src.clientX-r.left)*(canvas.width/r.width),y:(src.clientY-r.top)*(canvas.height/r.height)};
+  }
+  function scratch(e){
+    if(!scratching)return;e.preventDefault();
+    const {x,y}=getPos(e);
+    ctx.globalCompositeOperation='destination-out';
+    ctx.beginPath();ctx.arc(x,y,28,0,Math.PI*2);ctx.fill();
+    // check reveal
+    const data=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+    const total=data.length/4;
+    const cleared=data.filter((_,i)=>i%4===3&&data[i]===0).length;
+    if(cleared/total>0.55){canvas.style.display='none';launchConfetti(30);}
+  }
+  canvas.addEventListener('mousedown',e=>{scratching=true;scratch(e)});
+  canvas.addEventListener('mousemove',scratch);
+  canvas.addEventListener('mouseup',()=>scratching=false);
+  canvas.addEventListener('touchstart',e=>{scratching=true;scratch(e)},{passive:false});
+  canvas.addEventListener('touchmove',scratch,{passive:false});
+  canvas.addEventListener('touchend',()=>scratching=false);
+  canvas.style.display='block';
+}
+resetScratch();
+
+// click floats
+document.addEventListener('click',e=>{
+  const emojis=['✨','🌸','⭐','💫','🔥','💎','🌈'];
+  floatEmoji(e.clientX,e.clientY,emojis[Math.floor(Math.random()*emojis.length)]);
+});
+</script>
+</body>
+</html>
