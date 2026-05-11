@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>Cake Run 🦕 — Anne Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff3d8a;--yellow:#ffd600;--cyan:#00e5ff;
+  --green:#00e676;--orange:#ff6d00;
+  --bg:#09000f;--card:#16002a;--border:rgba(255,255,255,0.08);
+  --text:#f0e6ff;--muted:rgba(255,255,255,0.45);
+  --font:'Nunito',sans-serif;--display:'Boogaloo',cursive;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:var(--font);overflow-x:hidden;user-select:none}
+
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 10%,rgba(255,109,0,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 35% at 90% 80%,rgba(255,61,138,0.1) 0%,transparent 60%)}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(9,0,15,0.92);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.8rem 1.2rem;gap:0.5rem}
+.nav-logo{font-family:var(--display);font-size:1.3rem;color:var(--yellow);
+  text-decoration:none;text-shadow:0 0 16px rgba(255,214,0,0.35)}
+.nav-links{display:flex;gap:0.35rem;flex-wrap:wrap}
+.nav-link{padding:0.32rem 0.7rem;border-radius:20px;
+  border:1.5px solid rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:800;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.nav-link:hover{border-color:var(--pink);color:var(--pink)}
+.nav-link.active{background:var(--yellow);border-color:var(--yellow);color:#000}
+
+/* PAGE */
+.page{position:relative;z-index:1;padding:1.5rem 1rem 3rem;
+  max-width:640px;margin:0 auto}
+
+/* HEADER */
+.page-header{text-align:center;margin-bottom:1.5rem}
+.page-eyebrow{font-size:0.62rem;font-weight:800;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--orange);opacity:0.8;margin-bottom:0.4rem}
+.page-title{font-family:var(--display);font-size:clamp(2.2rem,8vw,3.5rem);
+  color:var(--yellow);text-shadow:0 0 30px rgba(255,214,0,0.25);line-height:1}
+.page-sub{font-size:0.82rem;color:var(--muted);margin-top:0.5rem;line-height:1.6}
+
+/* HUD */
+.hud{display:grid;grid-template-columns:repeat(3,1fr);gap:0.6rem;margin-bottom:0.8rem}
+.hud-cell{background:var(--card);border:1px solid var(--border);border-radius:14px;
+  padding:0.75rem 0.5rem;text-align:center}
+.hud-label{font-size:0.5rem;font-weight:800;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:0.25rem}
+.hud-val{font-family:var(--display);font-size:1.5rem;color:var(--yellow);line-height:1}
+.hud-cell.best .hud-val{color:var(--pink)}
+.hud-cell.speed .hud-val{color:var(--cyan)}
+
+/* GAME WRAP */
+.game-card{background:var(--card);border:2px solid rgba(255,214,0,0.2);
+  border-radius:20px;overflow:hidden;
+  box-shadow:0 0 50px rgba(255,109,0,0.1),0 0 100px rgba(255,61,138,0.05)}
+
+/* CANVAS */
+.canvas-wrap{position:relative;background:#070012;cursor:pointer;touch-action:none}
+canvas{display:block;width:100%}
+
+/* OVERLAY */
+.overlay{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:1rem;
+  background:rgba(0,0,0,0.78);text-align:center;padding:1.5rem;
+  transition:opacity 0.25s,pointer-events 0s}
+.overlay.gone{opacity:0;pointer-events:none}
+.ov-icon{font-size:3rem;animation:bounce 1.5s ease infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.ov-title{font-family:var(--display);font-size:clamp(1.4rem,5vw,2rem);color:var(--yellow);
+  text-shadow:0 0 20px rgba(255,214,0,0.4)}
+.ov-sub{font-size:0.8rem;color:var(--muted);line-height:1.7;max-width:260px}
+.ov-score{font-family:var(--display);font-size:1.1rem;
+  background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.2);
+  border-radius:10px;padding:0.5rem 1.2rem;color:var(--yellow)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.4rem;
+  padding:0.7rem 1.5rem;border:none;border-radius:12px;cursor:pointer;
+  font-family:var(--font);font-size:0.82rem;font-weight:800;
+  transition:all 0.15s;white-space:nowrap;text-decoration:none}
+.btn:active{transform:scale(0.95)}
+.btn-yellow{background:var(--yellow);color:#000;
+  box-shadow:0 6px 20px rgba(255,214,0,0.3)}
+.btn-yellow:hover{box-shadow:0 8px 28px rgba(255,214,0,0.45);transform:translateY(-2px)}
+.btn-ghost{background:rgba(255,255,255,0.06);color:var(--text);
+  border:1.5px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,0.1)}
+.btn-row{display:flex;gap:0.6rem;justify-content:center;margin-top:0.8rem;flex-wrap:wrap}
+
+/* CONTROLS HINT */
+.controls{display:flex;gap:0.6rem;justify-content:center;
+  margin-top:0.8rem;flex-wrap:wrap}
+.ctrl{display:flex;align-items:center;gap:0.4rem;
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  border-radius:8px;padding:0.4rem 0.8rem;font-size:0.7rem;color:var(--muted)}
+.ctrl-key{background:rgba(255,255,255,0.08);border-radius:5px;
+  padding:0.15rem 0.45rem;font-size:0.65rem;font-weight:800;color:var(--text)}
+
+/* MILESTONES */
+.milestones{margin-top:1.2rem}
+.ms-title{font-size:0.6rem;font-weight:800;letter-spacing:0.2em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:0.6rem;text-align:center}
+.ms-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem}
+.ms-item{background:var(--card);border:1px solid var(--border);border-radius:12px;
+  padding:0.6rem 0.4rem;text-align:center;transition:all 0.3s}
+.ms-item.unlocked{border-color:rgba(255,214,0,0.3);background:rgba(255,214,0,0.06)}
+.ms-icon{font-size:1.3rem;display:block;margin-bottom:0.25rem;
+  filter:grayscale(1);transition:filter 0.3s}
+.ms-item.unlocked .ms-icon{filter:grayscale(0)}
+.ms-score{font-size:0.55rem;font-weight:800;color:var(--muted)}
+.ms-item.unlocked .ms-score{color:var(--yellow)}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;
+  transform:translateX(-50%) translateY(30px);opacity:0;
+  background:rgba(22,0,42,0.96);border:1px solid var(--yellow);border-radius:10px;
+  padding:0.6rem 1.2rem;font-size:0.78rem;font-weight:800;color:var(--yellow);
+  z-index:9999;transition:all 0.35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* CONFETTI */
+.cf{position:fixed;top:-8px;border-radius:2px;pointer-events:none;z-index:9998;
+  animation:cffall linear forwards}
+@keyframes cffall{0%{opacity:1;transform:translateY(0) rotate(0)}
+  100%{opacity:0;transform:translateY(105vh) rotate(600deg) translateX(var(--dx))}}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">🎮 Anne Arcade</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link active" href="cakerun.html">🦕 Run</a>
+    <a class="nav-link" href="faithfun.html">🧁 Memory</a>
+    <a class="nav-link" href="faithfit.html">💪 Fit</a>
+    <a class="nav-link" href="jokes.html">🌸 Vibes</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div class="page-eyebrow">🕹️ Mini Game</div>
+    <div class="page-title">🦕 Cake Run!</div>
+    <div class="page-sub">Help the dino carry Faith's cake safely. Jump over obstacles — don't let it splat!</div>
+  </div>
+
+  <!-- HUD -->
+  <div class="hud">
+    <div class="hud-cell">
+      <div class="hud-label">Score</div>
+      <div class="hud-val" id="scoreVal">0</div>
+    </div>
+    <div class="hud-cell best">
+      <div class="hud-label">Best 🏆</div>
+      <div class="hud-val" id="bestVal">0</div>
+    </div>
+    <div class="hud-cell speed">
+      <div class="hud-label">Speed</div>
+      <div class="hud-val" id="speedVal">1×</div>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div class="game-card">
+    <div class="canvas-wrap" id="canvasWrap">
+      <canvas id="gameCanvas" height="200"></canvas>
+      <div class="overlay" id="overlay">
+        <div class="ov-icon" id="ovIcon">🦕</div>
+        <div class="ov-title" id="ovTitle">Cake Run!</div>
+        <div class="ov-sub" id="ovSub">The dino is carrying Faith's cake 🎂<br>Tap, click or press Space to jump.<br>Don't drop the cake!</div>
+        <button class="btn btn-yellow" id="ovBtn" onclick="gameStart()">▶ Start Game</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="ctrl"><span class="ctrl-key">TAP</span> or <span class="ctrl-key">CLICK</span> to jump</div>
+    <div class="ctrl"><span class="ctrl-key">SPACE</span> or <span class="ctrl-key">↑</span> to jump</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-ghost" onclick="gameRestart()">🔄 Restart</button>
+  </div>
+
+  <!-- MILESTONES -->
+  <div class="milestones">
+    <div class="ms-title">— milestones —</div>
+    <div class="ms-grid" id="msGrid"></div>
+  </div>
+</div>
+
+<script>
+// ── UTILS ──────────────────────────────────
+let _tt;
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('show');
+  clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2500);
+}
+function confetti(n=40){
+  const cols=['#ffd600','#ff3d8a','#00e5ff','#ff6d00','#00e676'];
+  for(let i=0;i<n;i++){
+    const d=document.createElement('div');d.className='cf';
+    const dx=(Math.random()-.5)*260+'px';
+    d.style.cssText=`left:${Math.random()*100}vw;background:${cols[i%cols.length]};
+      width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};--dx:${dx};
+      animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.3}s`;
+    document.body.appendChild(d);setTimeout(()=>d.remove(),3500);
+  }
+}
+
+// ── MILESTONES ─────────────────────────────
+const MILESTONES=[
+  {score:100, icon:'🎂', label:'100'},
+  {score:300, icon:'🍰', label:'300'},
+  {score:600, icon:'🏅', label:'600'},
+  {score:1000,icon:'🏆', label:'1000'},
+];
+let unlockedMS=JSON.parse(localStorage.getItem('aa_cr_ms')||'[]');
+function buildMS(){
+  const g=document.getElementById('msGrid');g.innerHTML='';
+  MILESTONES.forEach((m,i)=>{
+    const el=document.createElement('div');
+    el.className='ms-item'+(unlockedMS.includes(i)?' unlocked':'');
+    el.id='ms-'+i;
+    el.innerHTML=`<span class="ms-icon">${m.icon}</span><div class="ms-score">${m.label} pts</div>`;
+    g.appendChild(el);
+  });
+}
+function checkMS(score){
+  MILESTONES.forEach((m,i)=>{
+    if(score>=m.score&&!unlockedMS.includes(i)){
+      unlockedMS.push(i);
+      localStorage.setItem('aa_cr_ms',JSON.stringify(unlockedMS));
+      document.getElementById('ms-'+i)?.classList.add('unlocked');
+      toast(m.icon+' Milestone! '+m.label+' points!');
+      confetti(25);
+    }
+  });
+}
+buildMS();
+
+// ── CANVAS SETUP ───────────────────────────
+const CV  = document.getElementById('gameCanvas');
+const CTX = CV.getContext('2d');
+let CW, GND;
+
+function resizeCanvas(){
+  CW = document.getElementById('canvasWrap').clientWidth;
+  CV.width  = CW;
+  CV.height = 200;
+  GND = 158;
+  if(!gameRunning) drawStatic();
+}
+
+// ── GAME STATE ─────────────────────────────
+let gameRunning = false;
+let gameDead    = false;
+let score       = 0;
+let frame       = 0;
+let speed       = 4;
+let spawnTimer  = 0;
+let spawnInt    = 88;
+let rafID       = null;
+
+let hiScore = parseInt(localStorage.getItem('aa_cr_hs')||'0');
+document.getElementById('bestVal').textContent = hiScore;
+
+const DINO = { x:72, y:0, vy:0, jumping:false };
+let obstacles = [];
+let particles = [];
+let clouds    = [];
+
+// ── CLOUD INIT ─────────────────────────────
+function initClouds(){
+  clouds=[];
+  for(let i=0;i<4;i++){
+    clouds.push({x:Math.random()*CW,y:20+Math.random()*40,w:50+Math.random()*60,spd:0.3+Math.random()*0.4});
+  }
+}
+
+// ── START / RESTART ────────────────────────
+function gameStart(){
+  document.getElementById('overlay').classList.add('gone');
+  gameRestart();
+}
+function gameRestart(){
+  if(rafID) cancelAnimationFrame(rafID);
+  DINO.y=GND; DINO.vy=0; DINO.jumping=false;
+  gameDead=false; obstacles=[]; particles=[];
+  speed=4; spawnTimer=0; spawnInt=88;
+  score=0; frame=0;
+  initClouds();
+  document.getElementById('overlay').classList.add('gone');
+  document.getElementById('scoreVal').textContent='0';
+  document.getElementById('speedVal').textContent='1×';
+  gameRunning=true;
+  rafID=requestAnimationFrame(gameLoop);
+}
+
+// ── JUMP ──────────────────────────────────
+function jump(){
+  if(!gameRunning){ gameStart(); return; }
+  if(!DINO.jumping && !gameDead){
+    DINO.vy=-12;
+    DINO.jumping=true;
+  }
+}
+
+// ── GAME LOOP ─────────────────────────────
+function gameLoop(){
+  if(!gameRunning) return;
+  update();
+  draw();
+  rafID=requestAnimationFrame(gameLoop);
+}
+
+function update(){
+  frame++; score++;
+  speed = Math.min(14, 4 + Math.floor(score/220)*0.5);
+  const lvl = Math.floor(score/220)+1;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('speedVal').textContent = lvl+'×';
+  checkMS(score);
+
+  // Dino physics
+  DINO.vy += 0.65;
+  DINO.y  += DINO.vy;
+  if(DINO.y >= GND){ DINO.y=GND; DINO.vy=0; DINO.jumping=false; }
+
+  // Clouds
+  clouds.forEach(c=>{ c.x -= c.spd; if(c.x+c.w<0) c.x=CW+10; });
+
+  // Spawn obstacles
+  spawnTimer++;
+  if(spawnTimer > spawnInt){
+    spawnTimer=0;
+    spawnInt=Math.max(42, 88 - Math.floor(score/200)*4);
+    const t = Math.random()<0.5?'fork':'cake';
+    const h = t==='fork' ? 44+Math.random()*22 : 22+Math.random()*16;
+    const w = t==='fork' ? 16 : 26+Math.random()*12;
+    obstacles.push({x:CW+10, w, h, type:t});
+  }
+
+  // Move & collide
+  for(let i=obstacles.length-1;i>=0;i--){
+    obstacles[i].x -= speed;
+    if(obstacles[i].x + obstacles[i].w < 0){ obstacles.splice(i,1); continue; }
+    const o = obstacles[i];
+    const dLeft=DINO.x+14, dRight=DINO.x+56, dTop=DINO.y-44, dBot=DINO.y;
+    const oLeft=o.x+3, oRight=o.x+o.w-3, oTop=GND-o.h+6;
+    if(dRight>oLeft && dLeft<oRight && dBot>oTop && dTop<GND){
+      gameOver(); return;
+    }
+  }
+
+  // Particles
+  for(let i=particles.length-1;i>=0;i--){
+    const p=particles[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.32; p.life-=0.026;
+    if(p.life<=0) particles.splice(i,1);
+  }
+}
+
+// ── GAME OVER ─────────────────────────────
+function gameOver(){
+  gameRunning=false; gameDead=true;
+  if(score>hiScore){
+    hiScore=score;
+    localStorage.setItem('aa_cr_hs',hiScore);
+    document.getElementById('bestVal').textContent=hiScore;
+    toast('🏆 New best: '+hiScore+'!');
+    confetti(55);
+  }
+  // Splat particles
+  for(let i=0;i<35;i++){
+    particles.push({
+      x:DINO.x+60, y:DINO.y-55,
+      vx:(Math.random()-.5)*9,
+      vy:-Math.random()*8,
+      color:['#f48fb1','#795548','#fff9c4','#a5d6a7','#fff','#ffd600'][Math.floor(Math.random()*6)],
+      life:1, size:4+Math.random()*7
+    });
+  }
+  draw();
+  setTimeout(()=>{
+    const ov=document.getElementById('overlay');
+    document.getElementById('ovIcon').textContent='💀';
+    document.getElementById('ovTitle').textContent='Cake Splat! 🎂';
+    document.getElementById('ovSub').innerHTML=
+      `Score: <strong style="color:var(--yellow)">${score}</strong> &nbsp;·&nbsp; Best: <strong style="color:var(--pink)">${hiScore}</strong><br><br>The cake didn't make it this time 😅`;
+    document.getElementById('ovBtn').textContent='▶ Try Again';
+    document.getElementById('ovBtn').onclick=gameStart;
+    ov.classList.remove('gone');
+  },650);
+}
+
+// ── DRAW ──────────────────────────────────
+function draw(){
+  CTX.clearRect(0,0,CW,200);
+
+  // Sky gradient
+  const sky=CTX.createLinearGradient(0,0,0,200);
+  sky.addColorStop(0,'#09000f');
+  sky.addColorStop(1,'#1a002e');
+  CTX.fillStyle=sky; CTX.fillRect(0,0,CW,200);
+
+  // Stars
+  CTX.fillStyle='rgba(255,255,255,0.35)';
+  for(let i=0;i<10;i++) CTX.fillRect((i*97+23)%CW, (i*41+7)%50, 1.5, 1.5);
+
+  // Clouds
+  CTX.fillStyle='rgba(255,255,255,0.04)';
+  clouds.forEach(c=>{
+    CTX.beginPath();
+    CTX.ellipse(c.x+c.w*.3,c.y,c.w*.35,12,0,0,Math.PI*2); CTX.fill();
+    CTX.beginPath();
+    CTX.ellipse(c.x+c.w*.6,c.y-5,c.w*.28,10,0,0,Math.PI*2); CTX.fill();
+    CTX.beginPath();
+    CTX.ellipse(c.x+c.w*.5,c.y+4,c.w*.45,9,0,0,Math.PI*2); CTX.fill();
+  });
+
+  // Ground
+  const gr=CTX.createLinearGradient(0,GND,0,200);
+  gr.addColorStop(0,'#3d0060'); gr.addColorStop(1,'#1a0030');
+  CTX.fillStyle=gr; CTX.fillRect(0,GND,CW,200-GND);
+  CTX.strokeStyle='rgba(192,38,211,0.7)';
+  CTX.lineWidth=2;
+  CTX.beginPath(); CTX.moveTo(0,GND); CTX.lineTo(CW,GND); CTX.stroke();
+
+  // Ground shine dots
+  CTX.fillStyle='rgba(192,38,211,0.15)';
+  for(let i=0;i<8;i++) CTX.fillRect(i*(CW/8)+((frame*speed*.5)%(CW/8)),GND+4,20,2);
+
+  // Dino
+  drawDino(DINO.x, DINO.y, frame, gameDead);
+
+  // Obstacles
+  obstacles.forEach(o=>drawObstacle(o));
+
+  // Particles
+  particles.forEach(p=>{
+    CTX.globalAlpha=Math.max(0,p.life);
+    CTX.fillStyle=p.color;
+    CTX.beginPath();
+    CTX.arc(p.x,p.y,p.size,0,Math.PI*2);
+    CTX.fill();
+  });
+  CTX.globalAlpha=1;
+}
+
+function drawStatic(){
+  resizeCanvas();
+  CTX.clearRect(0,0,CW,200);
+  const sky=CTX.createLinearGradient(0,0,0,200);
+  sky.addColorStop(0,'#09000f'); sky.addColorStop(1,'#1a002e');
+  CTX.fillStyle=sky; CTX.fillRect(0,0,CW,200);
+  const gr=CTX.createLinearGradient(0,GND,0,200);
+  gr.addColorStop(0,'#3d0060'); gr.addColorStop(1,'#1a0030');
+  CTX.fillStyle=gr; CTX.fillRect(0,GND,CW,200-GND);
+  CTX.strokeStyle='rgba(192,38,211,0.7)';CTX.lineWidth=2;
+  CTX.beginPath();CTX.moveTo(0,GND);CTX.lineTo(CW,GND);CTX.stroke();
+  drawDino(72,GND,0,false);
+}
+
+// ── DRAW DINO ─────────────────────────────
+function drawDino(bx, by, fr, dead){
+  CTX.globalAlpha = dead ? 0.5 : 1;
+  const leg = fr%16 < 8;
+
+  // Tail
+  CTX.fillStyle='#558b2f'; CTX.fillRect(bx-12,by-22,12,8);
+  CTX.fillRect(bx-18,by-18,8,5);
+
+  // Body
+  CTX.fillStyle='#7cb342'; CTX.fillRect(bx,by-42,32,30);
+
+  // Body shading
+  CTX.fillStyle='rgba(0,0,0,0.1)'; CTX.fillRect(bx,by-42,32,4);
+
+  // Neck + head
+  CTX.fillStyle='#7cb342'; CTX.fillRect(bx+20,by-64,26,24);
+
+  // Snout
+  CTX.fillStyle='#9ccc65'; CTX.fillRect(bx+40,by-55,9,11);
+
+  // Nostril
+  CTX.fillStyle='#388e3c'; CTX.fillRect(bx+45,by-50,3,3);
+
+  // Eye white
+  CTX.fillStyle='#fff'; CTX.fillRect(bx+32,by-60,9,9);
+
+  // Pupil
+  CTX.fillStyle='#1a237e'; CTX.fillRect(bx+34,by-58,6,6);
+
+  // Shine
+  CTX.fillStyle='#fff'; CTX.fillRect(bx+37,by-57,2,2);
+
+  // Smile (tiny)
+  CTX.fillStyle='#388e3c';
+  CTX.fillRect(bx+40,by-48,5,2);
+
+  // Spine bumps
+  CTX.fillStyle='#558b2f';
+  [0,6,12].forEach(ox=>CTX.fillRect(bx+ox,by-46,4,5));
+
+  // Legs
+  CTX.fillStyle='#558b2f';
+  CTX.fillRect(bx+5,by-12, 9, leg?20:12);
+  CTX.fillRect(bx+20,by-12, 9, leg?12:20);
+
+  // Feet
+  CTX.fillStyle='#33691e';
+  CTX.fillRect(bx+3,  by+(leg? 7:-1), 13,5);
+  CTX.fillRect(bx+18, by+(leg?-1: 7), 13,5);
+
+  // Arm holding plate
+  CTX.fillStyle='#558b2f'; CTX.fillRect(bx+32,by-38,22,6);
+
+  // Plate
+  CTX.fillStyle='#e0e0e0'; CTX.fillRect(bx+50,by-52,28,5);
+  CTX.fillStyle='rgba(255,255,255,0.5)'; CTX.fillRect(bx+50,by-52,28,2);
+  CTX.fillStyle='#bdbdbd'; CTX.fillRect(bx+48,by-48,32,3);
+
+  // Cake — bottom tier
+  CTX.fillStyle='#6d4c41'; CTX.fillRect(bx+52,by-66,22,14);
+  CTX.fillStyle='rgba(255,255,255,0.08)'; CTX.fillRect(bx+52,by-66,22,3);
+
+  // Cake — top tier
+  CTX.fillStyle='#f06292'; CTX.fillRect(bx+55,by-76,16,10);
+
+  // Frosting drip
+  CTX.fillStyle='#fff9c4';
+  [0,7,14].forEach(d=>{ CTX.fillRect(bx+52+d,by-66,5,5); });
+
+  // Sprinkles on cake top
+  const sprinkCols=['#ff3d8a','#00e5ff','#ffd600','#00e676'];
+  [[2,3],[6,5],[10,2],[4,7],[12,6]].forEach(([sx,sy],i)=>{
+    CTX.fillStyle=sprinkCols[i%4];
+    CTX.fillRect(bx+56+sx,by-74+sy,3,1.5);
+  });
+
+  // Candle
+  CTX.fillStyle='#ef5350'; CTX.fillRect(bx+62,by-82,3,7);
+  CTX.fillStyle='#ffd600';
+  CTX.beginPath(); CTX.ellipse(bx+63,by-84
