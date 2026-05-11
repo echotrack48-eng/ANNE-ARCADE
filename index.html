@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anne Arcade 🎮</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff3d8a;--yellow:#ffd600;--cyan:#00e5ff;
+  --green:#00e676;--orange:#ff6d00;
+  --bg:#09000f;--card:#16002a;--border:rgba(255,255,255,0.08);
+  --text:#f0e6ff;--muted:rgba(255,255,255,0.45);
+  --font:'Nunito',sans-serif;--display:'Boogaloo',cursive;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:var(--font);overflow-x:hidden}
+
+/* BG GLOW */
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 10%,rgba(156,33,176,0.22) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 40% at 90% 90%,rgba(255,61,138,0.14) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 10%,rgba(255,214,0,0.06) 0%,transparent 50%)}
+
+/* STARS */
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle linear infinite}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:0.5}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(9,0,15,0.9);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.8rem 1.2rem;gap:0.5rem}
+.nav-logo{font-family:var(--display);font-size:1.3rem;color:var(--yellow);
+  text-decoration:none;text-shadow:0 0 16px rgba(255,214,0,0.35)}
+.nav-links{display:flex;gap:0.35rem;flex-wrap:wrap}
+.nav-link{padding:0.32rem 0.7rem;border-radius:20px;
+  border:1.5px solid rgba(255,255,255,0.1);
+  color:rgba(255,255,255,0.5);font-size:0.7rem;font-weight:800;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;white-space:nowrap}
+.nav-link:hover{border-color:var(--pink);color:var(--pink)}
+.nav-link.active{background:var(--pink);border-color:var(--pink);color:#fff}
+
+/* HERO */
+.hero{position:relative;z-index:1;text-align:center;
+  padding:3.5rem 1.2rem 2rem;
+  background:linear-gradient(180deg,rgba(156,33,176,0.08) 0%,transparent 100%)}
+.hero-eyebrow{font-size:0.65rem;font-weight:800;letter-spacing:0.3em;
+  text-transform:uppercase;color:var(--pink);opacity:0.8;margin-bottom:1rem;
+  animation:fadeUp 0.6s ease both}
+.hero-logo{font-family:var(--display);
+  font-size:clamp(3.5rem,15vw,7.5rem);line-height:0.95;
+  background:linear-gradient(135deg,var(--yellow) 0%,var(--pink) 45%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 50px rgba(255,61,138,0.25));
+  animation:fadeUp 0.6s ease 0.1s both}
+.hero-tagline{font-size:0.88rem;color:var(--muted);margin-top:0.8rem;
+  animation:fadeUp 0.6s ease 0.2s both}
+.hero-badge{display:inline-flex;align-items:center;gap:0.4rem;margin-top:1.2rem;
+  background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.25);
+  border-radius:20px;padding:0.45rem 1.1rem;
+  font-size:0.72rem;font-weight:800;color:var(--yellow);
+  animation:fadeUp 0.6s ease 0.3s both}
+
+/* SECTION LABEL */
+.section-label{position:relative;z-index:1;text-align:center;
+  padding:0.5rem 0 1rem;font-size:0.6rem;font-weight:800;
+  letter-spacing:0.25em;text-transform:uppercase;color:var(--muted)}
+
+/* GRID */
+.grid{position:relative;z-index:1;display:grid;
+  grid-template-columns:1fr 1fr;gap:0.9rem;
+  padding:0 1.1rem 1rem;max-width:560px;margin:0 auto}
+
+/* TILES */
+.tile{border-radius:20px;padding:1.4rem 1.1rem 1.2rem;
+  text-decoration:none;display:block;cursor:pointer;
+  border:1.5px solid transparent;transition:transform 0.2s,box-shadow 0.2s;
+  position:relative;overflow:hidden;
+  animation:fadeUp 0.5s ease both}
+.tile:nth-child(1){animation-delay:0.1s}
+.tile:nth-child(2){animation-delay:0.15s}
+.tile:nth-child(3){animation-delay:0.2s}
+.tile:nth-child(4){animation-delay:0.25s}
+.tile::after{content:'';position:absolute;inset:0;border-radius:18px;
+  background:rgba(255,255,255,0);transition:background 0.2s}
+.tile:hover{transform:translateY(-4px);box-shadow:0 20px 50px rgba(0,0,0,0.45)}
+.tile:hover::after{background:rgba(255,255,255,0.03)}
+.tile:active{transform:scale(0.97)}
+
+.tile-icon{font-size:2.5rem;display:block;margin-bottom:0.7rem;
+  transition:transform 0.2s}
+.tile:hover .tile-icon{transform:scale(1.1)}
+.tile-name{font-family:var(--display);font-size:1.25rem;margin-bottom:0.3rem}
+.tile-desc{font-size:0.7rem;line-height:1.55;color:rgba(255,255,255,0.42)}
+.tile-cta{display:inline-block;margin-top:0.8rem;font-size:0.6rem;
+  font-weight:800;letter-spacing:0.1em;text-transform:uppercase;
+  padding:0.25rem 0.6rem;border-radius:6px}
+
+/* Tile themes */
+.t-run{background:linear-gradient(145deg,rgba(255,109,0,0.13),rgba(255,214,0,0.07));
+  border-color:rgba(255,214,0,0.2)}
+.t-run .tile-name{color:var(--yellow)}
+.t-run .tile-cta{background:rgba(255,214,0,0.1);color:var(--yellow)}
+
+.t-fit{background:linear-gradient(145deg,rgba(0,230,118,0.12),rgba(0,229,255,0.05));
+  border-color:rgba(0,230,118,0.2)}
+.t-fit .tile-name{color:var(--green)}
+.t-fit .tile-cta{background:rgba(0,230,118,0.1);color:var(--green)}
+
+.t-fun{background:linear-gradient(145deg,rgba(0,229,255,0.1),rgba(156,33,176,0.07));
+  border-color:rgba(0,229,255,0.2)}
+.t-fun .tile-name{color:var(--cyan)}
+.t-fun .tile-cta{background:rgba(0,229,255,0.1);color:var(--cyan)}
+
+.t-vibes{background:linear-gradient(145deg,rgba(255,61,138,0.12),rgba(156,33,176,0.07));
+  border-color:rgba(255,61,138,0.2)}
+.t-vibes .tile-name{color:var(--pink)}
+.t-vibes .tile-cta{background:rgba(255,61,138,0.1);color:var(--pink)}
+
+/* DIVIDER */
+.divider{position:relative;z-index:1;text-align:center;
+  padding:0.5rem 0;font-size:1rem;letter-spacing:0.8rem;
+  color:rgba(255,255,255,0.06)}
+
+/* FOOTER */
+footer{position:relative;z-index:1;text-align:center;
+  padding:2rem 1rem 3rem;font-size:0.75rem;color:rgba(255,255,255,0.18)}
+footer span{color:var(--pink)}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:translateY(0)}
+}
+</style>
+</head>
+<body>
+
+<!-- Stars -->
+<div class="stars" id="stars"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">🎮 Anne Arcade</a>
+  <div class="nav-links">
+    <a class="nav-link active" href="index.html">Home</a>
+    <a class="nav-link" href="cakerun.html">🦕 Run</a>
+    <a class="nav-link" href="faithfun.html">🧁 Memory</a>
+    <a class="nav-link" href="faithfit.html">💪 Fit</a>
+    <a class="nav-link" href="jokes.html">🌸 Vibes</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">✦ Welcome to ✦</div>
+  <div class="hero-logo">Anne Arcade</div>
+  <div class="hero-tagline">Faith's personal little world on the internet 🌸</div>
+  <div class="hero-badge">🎮 Pick where you want to go</div>
+</div>
+
+<div class="section-label">— your pages —</div>
+
+<!-- TILES -->
+<div class="grid">
+  <a class="tile t-run" href="cakerun.html">
+    <span class="tile-icon">🦕</span>
+    <div class="tile-name">Cake Run</div>
+    <div class="tile-desc">Help the dino carry the cake! Jump over obstacles and beat your record.</div>
+    <span class="tile-cta">▶ Play Now</span>
+  </a>
+
+  <a class="tile t-fit" href="faithfit.html">
+    <span class="tile-icon">💪</span>
+    <div class="tile-name">Faith Fit</div>
+    <div class="tile-desc">Your personal workout plan. Check off exercises and build your streak!</div>
+    <span class="tile-cta">▶ Let's Go</span>
+  </a>
+
+  <a class="tile t-fun" href="faithfun.html">
+    <span class="tile-icon">🧁</span>
+    <div class="tile-name">Faith Fun</div>
+    <div class="tile-desc">Cake memory card game. 3 difficulty levels. Beat your best time!</div>
+    <span class="tile-cta">▶ Play Now</span>
+  </a>
+
+  <a class="tile t-vibes" href="jokes.html">
+    <span class="tile-icon">🌸</span>
+    <div class="tile-name">Daily Vibes</div>
+    <div class="tile-desc">A daily joke and affirmation to start your day with a smile.</div>
+    <span class="tile-cta">▶ Open</span>
+  </a>
+</div>
+
+<div class="divider">· · · ✦ · · ·</div>
+
+<footer>Anne Arcade — built with <span>♡</span> just for Faith 🎂</footer>
+
+<script>
+// Stars
+const sc=document.getElementById('stars');
+for(let i=0;i<55;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=1+Math.random()*2;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;top:${Math.random()*100}vh;animation-duration:${3+Math.random()*5}s;animation-delay:${Math.random()*6}s`;
+  sc.appendChild(s);
+}
+</script>
+</body>
+</html>
