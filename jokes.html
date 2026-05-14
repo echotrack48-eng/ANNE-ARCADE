@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Daily Vibes 🌸 — Anne Arcade</title>
+<link href="https://fonts.googleapis.com/css2?family=Boogaloo&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --pink:#ff3d8a;--yellow:#ffd600;--cyan:#00e5ff;
+  --green:#00e676;--purple:#9c27b0;--orange:#ff6d00;
+  --bg:#09000f;--card:#16002a;--border:rgba(255,255,255,0.07);
+  --text:#f0e6ff;--muted:rgba(255,255,255,0.42);
+  --font:'Nunito',sans-serif;--display:'Boogaloo',cursive;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);
+  font-family:var(--font);overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 65% 45% at 10% 5%,rgba(255,61,138,0.13) 0%,transparent 60%),
+    radial-gradient(ellipse 55% 40% at 90% 85%,rgba(156,33,176,0.12) 0%,transparent 60%)}
+
+/* STARS */
+.stars{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle linear infinite}
+@keyframes twinkle{0%,100%{opacity:0}50%{opacity:0.45}}
+
+/* NAV */
+.nav{position:sticky;top:0;z-index:100;background:rgba(9,0,15,0.92);
+  border-bottom:1px solid var(--border);backdrop-filter:blur(16px);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0.8rem 1.2rem;gap:0.5rem}
+.nav-logo{font-family:var(--display);font-size:1.3rem;color:var(--yellow);
+  text-decoration:none;text-shadow:0 0 16px rgba(255,214,0,0.35)}
+.nav-links{display:flex;gap:0.35rem;flex-wrap:wrap}
+.nav-link{padding:0.32rem 0.7rem;border-radius:20px;
+  border:1.5px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);
+  font-size:0.7rem;font-weight:800;cursor:pointer;text-decoration:none;
+  transition:all 0.2s;white-space:nowrap}
+.nav-link:hover{border-color:var(--pink);color:var(--pink)}
+.nav-link.active{background:var(--pink);border-color:var(--pink);color:#fff}
+
+/* PAGE */
+.page{position:relative;z-index:1;padding:1.5rem 1rem 4rem;
+  max-width:560px;margin:0 auto}
+
+/* HEADER */
+.page-header{text-align:center;margin-bottom:1.8rem}
+.page-eyebrow{font-size:0.62rem;font-weight:800;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--pink);opacity:0.8;margin-bottom:0.4rem}
+.page-title{font-family:var(--display);font-size:clamp(2.2rem,8vw,3.5rem);
+  color:var(--pink);text-shadow:0 0 30px rgba(255,61,138,0.2);line-height:1}
+.page-sub{font-size:0.82rem;color:var(--muted);margin-top:0.5rem;line-height:1.6}
+
+/* TODAY BANNER */
+.today-banner{background:linear-gradient(135deg,rgba(255,214,0,0.07),rgba(255,109,0,0.04));
+  border:1px solid rgba(255,214,0,0.18);border-radius:14px;
+  padding:0.8rem 1rem;margin-bottom:1.2rem;
+  display:flex;align-items:center;gap:0.8rem}
+.today-ico{font-size:1.6rem}
+.today-txt{font-size:0.78rem;color:rgba(255,214,0,0.8);font-weight:700;line-height:1.5}
+.today-txt span{color:var(--yellow);font-weight:800;display:block}
+
+/* TABS */
+.vtabs{display:flex;gap:0.5rem;margin-bottom:1.2rem}
+.vtab{flex:1;padding:0.7rem;border:2px solid var(--border);
+  background:transparent;border-radius:14px;cursor:pointer;
+  font-family:var(--font);font-size:0.8rem;font-weight:800;
+  color:var(--muted);transition:all 0.2s;text-align:center}
+.vtab.active{border-color:var(--pink);color:var(--pink);
+  background:rgba(255,61,138,0.07)}
+.vtab:hover:not(.active){border-color:rgba(255,61,138,0.3);
+  color:rgba(255,61,138,0.6)}
+
+/* PANELS */
+.vpanel{display:none;animation:fadeUp 0.3s ease}
+.vpanel.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:translateY(0)}}
+
+/* SEC LABEL */
+.sec-label{font-size:0.6rem;font-weight:800;letter-spacing:0.22em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:0.8rem;
+  display:flex;align-items:center;gap:0.5rem}
+.sec-label::before,.sec-label::after{content:'';flex:1;height:1px;
+  background:rgba(255,255,255,0.05)}
+
+/* ── JOKE CARD ── */
+.joke-card{border-radius:20px;padding:2rem 1.5rem;text-align:center;
+  min-height:230px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  background:linear-gradient(145deg,rgba(255,61,138,0.09),rgba(156,33,176,0.06));
+  border:1.5px solid rgba(255,61,138,0.18);
+  cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;
+  user-select:none;position:relative;overflow:hidden}
+.joke-card::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(255,61,138,0.06),transparent 70%)}
+.joke-card:hover{transform:scale(1.01);
+  box-shadow:0 12px 40px rgba(255,61,138,0.12)}
+.joke-card:active{transform:scale(0.99)}
+.j-emoji{font-size:2.8rem;margin-bottom:1rem;display:block;
+  animation:floaty 3s ease infinite}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.j-q{font-size:1rem;font-weight:800;line-height:1.55;color:var(--text);max-width:320px}
+.j-a{margin-top:0.9rem;font-size:0.9rem;color:var(--yellow);font-style:italic;
+  min-height:26px;transition:opacity 0.3s,transform 0.3s;max-width:320px;line-height:1.5}
+.j-a.hidden{opacity:0;transform:translateY(6px);pointer-events:none}
+.j-hint{margin-top:0.9rem;font-size:0.6rem;font-weight:800;
+  letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.2)}
+
+/* DOTS */
+.j-dots{display:flex;align-items:center;justify-content:center;
+  gap:0.35rem;margin:0.75rem 0}
+.dot{width:6px;height:6px;border-radius:50%;
+  background:rgba(255,255,255,0.1);transition:all 0.25s;cursor:pointer}
+.dot.on{background:var(--pink);transform:scale(1.35)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:0.35rem;
+  padding:0.65rem 1.2rem;border:none;border-radius:12px;cursor:pointer;
+  font-family:var(--font);font-size:0.78rem;font-weight:800;
+  transition:all 0.15s;white-space:nowrap;text-decoration:none}
+.btn:active{transform:scale(0.95)}
+.btn-ghost{background:rgba(255,255,255,0.05);color:var(--text);
+  border:1.5px solid var(--border)}
+.btn-ghost:hover{background:rgba(255,255,255,0.09)}
+.btn-yellow{background:var(--yellow);color:#000;
+  box-shadow:0 4px 16px rgba(255,214,0,0.25)}
+.btn-cyan{background:var(--cyan);color:#000;
+  box-shadow:0 4px 16px rgba(0,229,255,0.2)}
+.btn-sm{padding:0.5rem 0.95rem;font-size:0.72rem}
+.card-nav{display:flex;gap:0.5rem;justify-content:center}
+
+/* JOKE GRID */
+.coll-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.4rem;
+  margin-bottom:0.5rem}
+.coll-item{aspect-ratio:1;border-radius:10px;
+  background:rgba(255,255,255,0.025);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;cursor:pointer;transition:all 0.18s}
+.coll-item:hover{background:rgba(255,61,138,0.08);
+  border-color:rgba(255,61,138,0.25);transform:scale(1.06)}
+.coll-item.current{border-color:var(--pink);
+  background:rgba(255,61,138,0.1);transform:scale(1.06)}
+
+/* ── AFFIRMATION CARD ── */
+.aff-card{border-radius:20px;padding:2rem 1.5rem;text-align:center;
+  background:linear-gradient(145deg,rgba(0,229,255,0.08),rgba(0,230,118,0.04));
+  border:1.5px solid rgba(0,229,255,0.15);min-height:210px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;transition:opacity 0.2s,transform 0.2s}
+.aff-card::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at 50% 0%,rgba(0,229,255,0.05),transparent 70%)}
+.aff-emoji{font-size:2.5rem;margin-bottom:0.9rem;display:block;
+  animation:floaty 3s ease infinite}
+.aff-quote{font-family:var(--display);font-size:clamp(1.1rem,4vw,1.6rem);
+  color:var(--cyan);line-height:1.3;margin-bottom:0.6rem;max-width:340px}
+.aff-note{font-size:0.8rem;color:var(--muted);line-height:1.65;max-width:310px}
+.aff-badge{margin-top:0.9rem;display:inline-block;
+  background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.18);
+  border-radius:20px;padding:0.28rem 0.8rem;
+  font-size:0.6rem;font-weight:800;letter-spacing:0.1em;
+  text-transform:uppercase;color:rgba(0,229,255,0.6)}
+
+/* AFF REMINDER */
+.aff-reminder{display:flex;align-items:center;gap:0.75rem;
+  background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.1);
+  border-radius:12px;padding:0.75rem 1rem;margin-top:0.8rem}
+.aff-reminder-ico{font-size:1.2rem;flex-shrink:0}
+.aff-reminder-txt{font-size:0.75rem;color:var(--muted);line-height:1.55}
+.aff-reminder-txt strong{color:var(--cyan)}
+
+/* AFF GRID */
+.aff-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0.4rem}
+.aff-item{aspect-ratio:1;border-radius:10px;
+  background:rgba(255,255,255,0.025);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.2rem;cursor:pointer;transition:all 0.18s}
+.aff-item:hover{background:rgba(0,229,255,0.08);
+  border-color:rgba(0,229,255,0.25);transform:scale(1.06)}
+.aff-item.current{border-color:var(--cyan);
+  background:rgba(0,229,255,0.1);transform:scale(1.06)}
+
+/* GAP */
+.gap{height:1rem}.gap-sm{height:0.55rem}
+
+/* TOAST */
+.toast{position:fixed;bottom:1.5rem;left:50%;
+  transform:translateX(-50%) translateY(30px);opacity:0;
+  background:rgba(22,0,42,0.96);border:1px solid var(--pink);border-radius:10px;
+  padding:0.6rem 1.2rem;font-size:0.78rem;font-weight:800;color:var(--pink);
+  z-index:9999;transition:all 0.35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+/* CONFETTI */
+.cf{position:fixed;top:-8px;border-radius:2px;pointer-events:none;z-index:9998;
+  animation:cffall linear forwards}
+@keyframes cffall{0%{opacity:1;transform:translateY(0) rotate(0)}
+  100%{opacity:0;transform:translateY(105vh) rotate(600deg) translateX(var(--dx))}}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+<div class="toast" id="toast"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="index.html">🎮 Anne Arcade</a>
+  <div class="nav-links">
+    <a class="nav-link" href="index.html">Home</a>
+    <a class="nav-link" href="cakerun.html">🦕 Run</a>
+    <a class="nav-link" href="faithfun.html">🧁 Memory</a>
+    <a class="nav-link" href="faithfit.html">💪 Fit</a>
+    <a class="nav-link active" href="jokes.html">🌸 Vibes</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="page-eyebrow">🌸 Daily Vibes</div>
+    <div class="page-title">Good Vibes</div>
+    <div class="page-sub">A laugh and a reminder — just for you, every single day 💕</div>
+  </div>
+
+  <!-- TODAY BANNER -->
+  <div class="today-banner">
+    <div class="today-ico">📅</div>
+    <div class="today-txt">
+      <span id="todayStr">Today</span>
+      Your daily joke and affirmation are ready for you!
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="vtabs">
+    <button class="vtab active" id="vt-jokes" onclick="setTab('jokes')">😂 Jokes</button>
+    <button class="vtab" id="vt-aff"   onclick="setTab('aff')">✨ Affirmations</button>
+  </div>
+
+  <!-- ══ JOKES ══ -->
+  <div class="vpanel active" id="vp-jokes">
+
+    <div class="sec-label">joke of the day</div>
+
+    <div class="joke-card" id="jokeCard" onclick="revealPunch()">
+      <span class="j-emoji" id="jEmoji">😂</span>
+      <div class="j-q" id="jQ"></div>
+      <div class="j-a hidden" id="jA"></div>
+      <div class="j-hint" id="jHint">TAP TO REVEAL PUNCHLINE</div>
+    </div>
+
+    <div class="j-dots" id="jDots"></div>
+
+    <div class="card-nav">
+      <button class="btn btn-ghost btn-sm" onclick="prevJoke()">◀ Prev</button>
+      <button class="btn btn-yellow btn-sm" onclick="randomJoke()">🎲 Random</button>
+      <button class="btn btn-ghost btn-sm" onclick="nextJoke()">Next ▶</button>
+    </div>
+
+    <div class="gap"></div>
+    <div class="sec-label">all jokes — tap any to read</div>
+    <div class="coll-grid" id="jokeGrid"></div>
+
+  </div>
+
+  <!-- ══ AFFIRMATIONS ══ -->
+  <div class="vpanel" id="vp-aff">
+
+    <div class="sec-label">today's affirmation</div>
+
+    <div class="aff-card" id="affCard">
+      <span class="aff-emoji" id="affEmoji">✨</span>
+      <div class="aff-quote" id="affQuote"></div>
+      <div class="aff-note"  id="affNote"></div>
+      <div class="aff-badge" id="affBadge"></div>
+    </div>
+
+    <div class="aff-reminder">
+      <div class="aff-reminder-ico">🌸</div>
+      <div class="aff-reminder-txt">
+        <strong>Read it out loud.</strong> Mean every word.
+        You deserve to believe this about yourself.
+      </div>
+    </div>
+
+    <div class="gap-sm"></div>
+    <div class="card-nav">
+      <button class="btn btn-ghost btn-sm" onclick="prevAff()">◀ Prev</button>
+      <button class="btn btn-cyan btn-sm"  onclick="randomAff()">🎲 Random</button>
+      <button class="btn btn-ghost btn-sm" onclick="nextAff()">Next ▶</button>
+    </div>
+
+    <div class="gap"></div>
+    <div class="sec-label">all affirmations — tap any to read</div>
+    <div class="aff-grid" id="affGrid"></div>
+
+  </div>
+
+</div>
+
+<script>
+// ── UTILS ──────────────────────────────────
+let _tt;
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2400);}
+function confetti(n=25){const c=['#ff3d8a','#ffd600','#00e5ff','#ff6d00','#00e676','#c026d3'];for(let i=0;i<n;i++){const d=document.createElement('div');d.className='cf';const dx=(Math.random()-.5)*240+'px';d.style.cssText=`left:${Math.random()*100}vw;background:${c[i%c.length]};width:${5+Math.random()*7}px;height:${5+Math.random()*7}px;border-radius:${Math.random()>.5?'50%':'2px'};--dx:${dx};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.3}s`;document.body.appendChild(d);setTimeout(()=>d.remove(),3500);}}
+
+// ── STARS ──────────────────────────────────
+const sc=document.getElementById('stars');
+for(let i=0;i<50;i++){
+  const s=document.createElement('div');s.className='star';
+  const sz=1+Math.random()*2;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}vw;top:${Math.random()*100}vh;animation-duration:${3+Math.random()*5}s;animation-delay:${Math.random()*6}s`;
+  sc.appendChild(s);
+}
+
+// ── TODAY ───────────────────────────────────
+const now=new Date();
+const DAYS_STR=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const MONTHS_STR=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+document.getElementById('todayStr').textContent=
+  DAYS_STR[now.getDay()]+', '+MONTHS_STR[now.getMonth()]+' '+now.getDate()+' —';
+
+// ── TAB ─────────────────────────────────────
+function setTab(t){
+  document.querySelectorAll('.vtab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.vpanel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('vt-'+t).classList.add('active');
+  document.getElementById('vp-'+t).classList.add('active');
+}
+
+// ══════════════════════════════════════════
+// JOKES
+// ══════════════════════════════════════════
+const JOKES=[
+  {e:'🎂',q:'Why did the cake go to school?',a:'It wanted to be a layer cake!'},
+  {e:'😂',q:'What do you call a stolen cake?',a:'A piece of crime!'},
+  {e:'🧁',q:'Why did the cupcake go to therapy?',a:'Too many issues with its frosting.'},
+  {e:'🍰',q:'What did the birthday cake say to the candles?',a:'You light me up!'},
+  {e:'😎',q:"Why don't scientists trust atoms?",a:'Because they make up everything!'},
+  {e:'🤣',q:'What do you call a sleeping dinosaur?',a:'A dino-snore!'},
+  {e:'🎭',q:'Why did the scarecrow win an award?',a:'He was outstanding in his field!'},
+  {e:'😄',q:'What do you call cheese that is not yours?',a:'Nacho cheese!'},
+  {e:'🌟',q:'Why did the math book look so sad?',a:'It had too many problems!'},
+  {e:'🤗',q:'What do you call a fish without eyes?',a:'A fsh!'},
+  {e:'🍩',q:'Why do donuts make terrible detectives?',a:'They always have holes in their stories!'},
+  {e:'💫',q:'Why did the banana go to the doctor?',a:"It wasn't peeling well!"},
+  {e:'😆',q:'What do you call a fake noodle?',a:'An impasta!'},
+  {e:'🌈',q:"Why can't you give Elsa a balloon?",a:"She'll let it go!"},
+  {e:'🐻',q:'What do you call a bear with no teeth?',a:'A gummy bear!'},
+  {e:'👗',q:'Why did the belt go to jail?',a:'It held up a pair of pants!'},
+  {e:'🌽',q:'What has ears but cannot hear?',a:'A cornfield!'},
+  {e:'🕵️',q:'Why did the invisible man turn down the job?',a:"He couldn't see himself doing it!"},
+  {e:'🍓',q:'What do you call a sad strawberry?',a:'A blueberry!'},
+  {e:'🚲',q:'Why did the bicycle fall over?',a:'It was two-tired!'},
+  {e:'🦆',q:"What do you call a duck that gets all A's?",a:'A wise quacker!'},
+  {e:'⏰',q:'Why did the clock get in trouble at school?',a:"It always tocked too much!"},
+  {e:'🌊',q:"Why don't oysters share?",a:"Because they're shellfish!"},
+  {e:'🪴',q:'Why do plants always win arguments?',a:'Because they always have the best roots!'},
+  {e:'🎵',q:'Why did the music teacher need a ladder?',a:'To reach the high notes!'},
+];
+
+let jIdx=now.getDate()%JOKES.length, jRevealed=false;
+
+function renderJoke(){
+  const j=JOKES[jIdx];
+  const card=document.getElementById('jokeCard');
+  card.style.opacity='0';card.style.transform='scale(0.96)';
+  setTimeout(()=>{
+    document.getElementById('jEmoji').textContent=j.e;
+    document.getElementById('jQ').textContent=j.q;
+    const ja=document.getElementById('jA');
+    ja.textContent='👉 '+j.a;ja.classList.add('hidden');
+    document.getElementById('jHint').textContent='TAP TO REVEAL PUNCHLINE';
+    jRevealed=false;
+    card.style.transition='all 0.28s ease';
+    card.style.opacity='1';card.style.transform='scale(1)';
+    buildJokeDots();buildJokeGrid();
+  },140);
+}
+
+function revealPunch(){
+  if(!jRevealed){
+    document.getElementById('jA').classList.remove('hidden');
+    document.getElementById('jHint').textContent='TAP FOR NEXT JOKE ▶';
+    jRevealed=true;confetti(22);
+  } else nextJoke();
+}
+function nextJoke(){jIdx=(jIdx+1)%JOKES.length;renderJoke();}
+function prevJoke(){jIdx=(jIdx-1+JOKES.length)%JOKES.length;renderJoke();}
+function randomJoke(){let r;do{r=Math.floor(Math.random()*JOKES.length);}while(r===jIdx);jIdx=r;renderJoke();toast('🎲 Here\'s a random one!');}
+
+function buildJokeDots(){
+  const el=document.getElementById('jDots');el.innerHTML='';
+  // Show 7 dots centred around current
+  const half=3,total=JOKES.length;
+  let start=Math.max(0,jIdx-half);
+  let end=Math.min(total-1,start+6);
+  start=Math.max(0,end-6);
+  for(let i=start;i<=end;i++){
+    const d=document.createElement('div');d.className='dot'+(i===jIdx?' on':'');
+    d.onclick=(()=>{const idx=i;return()=>{jIdx=idx;renderJoke();};})();
+    el.appendChild(d);
+  }
+}
+
+function buildJokeGrid(){
+  const g=document.getElementById('jokeGrid');g.innerHTML='';
+  JOKES.forEach((j,i)=>{
+    const item=document.createElement('div');
+    item.className='coll-item'+(i===jIdx?' current':'');
+    item.title=j.q;item.textContent=j.e;
+    item.onclick=()=>{jIdx=i;renderJoke();};
+    g.appendChild(item);
+  });
+}
+
+// ══════════════════════════════════════════
+// AFFIRMATIONS
+// ══════════════════════════════════════════
+const AFFS=[
+  {e:'🌸',t:'I am enough, exactly as I am.',n:'No upgrades needed. No changes required. You are complete, right now, today.',badge:'Self Worth'},
+  {e:'⭐',t:'My potential has no ceiling.',n:'The sky is not the limit — there is no limit. You are just getting started.',badge:'Growth'},
+  {e:'🔥',t:'I attract good things simply by being myself.',n:'Your energy is magnetic, Faith. The right things are naturally drawn to you.',badge:'Energy'},
+  {e:'💎',t:'I am worthy of love, rest, and joy.',n:'All three — without earning them, without explaining yourself. Just because you exist.',badge:'Self Love'},
+  {e:'🌱',t:'I am growing into the best version of me.',n:'Every single day is proof of your progress, even on the days it does not feel like it.',badge:'Progress'},
+  {e:'👑',t:'My presence is a gift to the world.',n:'Never dim your light to make others comfortable. The world needs exactly what you bring.',badge:'Power'},
+  {e:'🕊️',t:'I choose peace over perfection.',n:'Good enough and happy will always beat perfect and stressed. Peace is the real goal.',badge:'Peace'},
+  {e:'💪',t:'I release what I cannot control.',n:'And I pour every bit of my energy into what I can. That is where real power lives.',badge:'Focus'},
+  {e:'🌟',t:'Every setback is setting me up.',n:'Trust the journey — even the hard parts, the confusing parts. It is all working for you.',badge:'Resilience'},
+  {e:'✨',t:'I am proud of how far I have come.',n:'Give yourself the credit you freely give to others. You deserve it more than you know.',badge:'Gratitude'},
+  {e:'🌊',t:'I deserve to take up space.',n:'Speak up. Show up. Sit at the table. Your place was always meant for you — take it.',badge:'Boldness'},
+  {e:'💫',t:'I am not my worst day.',n:'You are the sum of your kindest moments, your strongest choices, your brightest days.',badge:'Grace'},
+  {e:'🌺',t:'My body is strong, healthy, and beautiful.',n:'Be kind to it. It carries you through everything — every win, every hard day, every new start.',badge:'Body Love'},
+  {e:'☀️',t:'I radiate confidence naturally.',n:'Walk like you own every room you enter — because you do. You were made for this.',badge:'Confidence'},
+  {e:'🎯',t:'Today I choose joy.',n:"It is a decision you get to make every morning. Make it boldly, unapologetically, completely.",badge:'Joy'},
+  {e:'🦋',t:'Change is making me stronger.',n:'Every version of you has been necessary. You are becoming exactly who you were meant to be.',badge:'Transformation'},
+  {e:'🌙',t:'I rest without guilt.',n:'Rest is not laziness. It is strategy, wisdom, and how you come back even stronger tomorrow.',badge:'Rest'},
+  {e:'💝',t:'I give and receive love freely.',n:'You are full of love to give — and you deserve all of that love returned to you tenfold.',badge:'Love'},
+  {e:'🏆',t:'I celebrate my wins, big and small.',n:'Every step counts. Every effort matters. Every small win deserves a moment of recognition.',badge:'Achievement'},
+  {e:'🌍',t:'I am exactly where I need to be.',n:'Your timing is not behind anyone else\'s. This is your story, your pace, your beautiful journey.',badge:'Trust'},
+];
+
+let aIdx=now.getDay()%AFFS.length;
+
+function renderAff(){
+  const a=AFFS[aIdx];
+  const card=document.getElementById('affCard');
+  card.style.opacity='0';card.style.transform='scale(0.97)';
+  setTimeout(()=>{
+    document.getElementById('affEmoji').textContent=a.e;
+    document.getElementById('affQuote').textContent='"'+a.t+'"';
+    document.getElementById('affNote').textContent=a.n;
+    document.getElementById('affBadge').textContent=(aIdx+1)+' / '+AFFS.length+' · '+a.badge;
+    card.style.transition='all 0.28s ease';
+    card.style.opacity='1';card.style.transform='scale(1)';
+    buildAffGrid();
+  },140);
+}
+function nextAff(){aIdx=(aIdx+1)%AFFS.length;renderAff();}
+function prevAff(){aIdx=(aIdx-1+AFFS.length)%AFFS.length;renderAff();}
+function randomAff(){let r;do{r=Math.floor(Math.random()*AFFS.length);}while(r===aIdx);aIdx=r;renderAff();toast('✨ Here\'s one just for you!');}
+
+function buildAffGrid(){
+  const g=document.getElementById('affGrid');g.innerHTML='';
+  AFFS.forEach((a,i)=>{
+    const item=document.createElement('div');
+    item.className='aff-item'+(i===aIdx?' current':'');
+    item.title=a.t;item.textContent=a.e;
+    item.onclick=()=>{aIdx=i;renderAff();};
+    g.appendChild(item);
+  });
+}
+
+// ── INIT ───────────────────────────────────
+renderJoke();
+renderAff();
+</script>
+</body>
+</html>
